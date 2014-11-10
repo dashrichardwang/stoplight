@@ -1,0 +1,66 @@
+#Richard Wang and Tian-Yo Yang
+#CS 1301 Section B05
+#rwang329@gatech.edu/tyang82@gatech.edu
+#We worked on the homework assignment alone, using only this semester's course material
+
+from Myro import*
+import colorsys
+setPicSize("small")
+
+
+autoCamera()
+
+def findColor(apic):
+    show(apic)
+    r = 0
+    g = 0
+    b = 0
+    for x in range(getWidth(apic)):
+        for y in range(getHeight(apic)):
+            apix = getPixel(apic, x,y)
+            redValue = getRed(apix)
+            greenValue = getGreen(apix)
+            blueValue = getBlue(apix)
+            r= redValue + r
+            g = greenValue + g
+            b = blueValue + b
+    r = r/(getWidth(apic)*getHeight(apic))
+    b = b/(getWidth(apic)*getHeight(apic))
+    g = g/(getWidth(apic)*getHeight(apic))
+    if r > 150 and g > 150 and b > 150: #since camera is not precise, we had to use a range of pixel values in order to determine color
+        return 'white'
+    if r > 150 and g > 150 and b < 150:
+        return 'yellow'
+    if r >150 and g < 150 and b < 150:
+        return 'red'
+    if g > 100 and r < 150 and b < 150:
+        return 'green'
+
+def turn():
+    a = heads()
+    if a == True:
+        setLED("left", "on")
+        wait(2)
+        setLED("left", "off")
+        turnLeft(1,1)
+    else:
+        setLED("right", "on")
+        wait(2)
+        setLED("right", "off")
+        turnRight(1,1)
+
+def stopLight():
+    x = 0
+    while x == 0:
+        apic = takePicture()
+        color = findColor(apic)
+        if color == 'green':
+            forward(1,2)
+        elif color == 'yellow':
+            forward(.5,2)
+        elif color == 'white':
+            turn()
+        elif color == 'red':
+            stop()
+            beep(1,800)
+            x = 1
